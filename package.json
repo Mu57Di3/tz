@@ -1,0 +1,49 @@
+{
+  "name": "tz.mu57di3.org",
+  "version": "1.0.0",
+  "description": "tz",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mu57Di3",
+  "license": "ISC",
+  "dependencies": {
+    "backbone": "^1.2.0",
+    "backbone.marionette": "^2.4.1",
+    "browserify": "^10.2.3",
+    "browserify-shim": "*",
+    "gulp-rename": "^1.2.2",
+    "gulp-sftp": "^0.1.4",
+    "gulp-sourcemaps": "^1.5.2",
+    "gulp-uglify": "^1.2.0",
+    "jquery": "^2.1.4",
+    "twig": "^0.8.2",
+    "underscore": "^1.8.3",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
+  },
+  "browser": {
+    "underscore": "./node_modules/underscore/underscore.js",
+    "backbone": "./node_modules/backbone/backbone.js",
+    "backbone.marionette": "./node_modules/backbone.marionette/lib/backbone.marionette.js"
+  },
+  "browserify-shim": {
+    "underscore": {
+      "exports": "_"
+    },
+    "backbone": {
+      "depends": "underscore",
+      "exports": "Backbone"
+    },
+    "backbone.marionette": {
+      "depends": "backbone",
+      "exports": "Marionette"
+    }
+  },
+  "browserify": {
+    "transform": [
+      "browserify-shim"
+    ]
+  }
+}
