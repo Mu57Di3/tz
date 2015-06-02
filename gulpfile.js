@@ -10,6 +10,7 @@ var rename      = require('gulp-rename');
 var sourcemaps  = require('gulp-sourcemaps');
 var buffer      = require('vinyl-buffer');
 var sftp        = require('gulp-sftp');
+var auth        = require('./auth.json');
 
 
 gulp.task('app-debug',function (){
@@ -29,8 +30,8 @@ gulp.task('app-debug',function (){
         .pipe(gulp.dest('./js/'))
         .pipe(sftp({
             host:'192.168.0.98',
-            user:'pi',
-            pass:'b3nd3r',
+            user:auth.login,
+            pass:auth.pass,
             remotePath:'/home/www/tz/js'
         }));
 });
