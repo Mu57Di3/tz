@@ -36,12 +36,16 @@ var editorView = Backbone.Marionette.ItemView.extend({
             canvas = G_vmlCanvasManager.initElement(canvas);
         }
         this.canvasContext = canvas.getContext('2d');
+        this.clickX = [];
+        this.clickY = [];
+        this.clickDrag = [];
     },
 
     /**
      * Обработчик события очистки канвы
      */
     clearHandler: function(){
+        console.log('чистка');
         this.canvasContext.clearRect(0, 0, this.canvasContext.canvas.width, this.canvasContext.canvas.height);
         this.clickX = [];
         this.clickY = [];
