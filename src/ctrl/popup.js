@@ -40,6 +40,7 @@ var Modal = Backbone.Marionette.LayoutView.extend({
         }
         $('#myModal').modal('show');
         $('#myModal').on('hide.bs.modal', function (e) {
+            console.log('modal remove');
             that.remove();
         })
     },
