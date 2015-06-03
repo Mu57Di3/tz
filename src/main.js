@@ -3,27 +3,57 @@
  */
 
 var MyApp = Marionette.Application.extend({
+    el:'body',
+
     initialize:function (){
 
     },
 
+
     events:{
-        'start':'startHandler'
+        'click button#bNew':'newImageHandler'
+    }
+
+});
+
+var AppLayoutView = Backbone.Marionette.LayoutView.extend({
+    template: 'templates/main.twig',
+
+    regions:{
+        main : '#app',
+        modal: '#modal'
     },
 
-    startHandler: function(){
+    events:{
+        'click button#bNew':'newImageHandler'
+    },
 
+    onShow: function() {
+
+    },
+
+    newImageHandler:function(){
+        console.log('new');
+        var Modal = require('./ctrl/popup'),
+        editor = require('./ctrl/editor');
+        this.getRegion('modal').show(new Modal({
+            v:new editor(),
+            tpl:{
+                title:'Новое изображение',
+                button:''
+            },
+            success:false
+        }));
     }
 
 });
 
 var app = new MyApp();
 app.addRegions({
-    main: "#app"
+    app: ".container"
 });
 app.on('start',function(){
-    var vEditor = require('./ctrl/editor');
-    this.getRegion('main').show(vEditor);
+    this.getRegion('app').show(new AppLayoutView());
 });
 app.start();
 
