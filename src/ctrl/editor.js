@@ -141,4 +141,4 @@ var editorView = Backbone.Marionette.ItemView.extend({
 
 });
 
-module.exports =  new editorView();
+module.exports =  editorView;
