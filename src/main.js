@@ -35,7 +35,7 @@ var AppLayoutView = Backbone.Marionette.LayoutView.extend({
     newImageHandler:function(){
         console.log('new');
         var Modal = require('./ctrl/popup'),
-        editor = require('./ctrl/editor');
+            editor = require('./ctrl/editor');
         this.getRegion('modal').show(new Modal({
             v:new editor(),
             tpl:{
