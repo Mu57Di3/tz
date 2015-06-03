@@ -11,6 +11,7 @@ var sourcemaps  = require('gulp-sourcemaps');
 var buffer      = require('vinyl-buffer');
 var sftp        = require('gulp-sftp');
 var auth        = require('./auth.json');
+var size        = require('gulp-size');
 
 
 gulp.task('app-debug',function (){
@@ -27,6 +28,7 @@ gulp.task('app-debug',function (){
         .pipe(sourcemaps.init({loadMaps: true}))
         .pipe(rename({suffix: '.min'}))
         .pipe(sourcemaps.write('./'))
+        .pipe(size({showFiles:true}))
         .pipe(gulp.dest('./js/'))
         .pipe(sftp({
             host:'192.168.0.98',
@@ -46,7 +48,7 @@ gulp.task('app-prodaction',function (){
             console.log(error);
         })
         .pipe(source('main.js'))
-        .pipe(buffer())
+        .pipe(buffer(true))
         .pipe(uglify({
             mangle: true,
             compress: {
@@ -63,5 +65,6 @@ gulp.task('app-prodaction',function (){
             }
         }))
         .pipe(rename({suffix: '.min'}))
+        .pipe(size({showFiles:true}))
         .pipe(gulp.dest('./js/'))
 });
