@@ -49,6 +49,27 @@ var editorView = Backbone.Marionette.ItemView.extend({
     },
 
     /**
+     * Сохранение изображения
+     */
+    saveHandler:function (){
+        var imageData = this.canvasContext.canvas.toDataURL('image/jpeg');
+        var sendData = {
+            'newimage':imageData
+        };
+        $.ajax({
+            url:'http://tz.mu57di3.org/imagehole',
+            dataType:'json',
+            type:'POST',
+            data:sendData
+        }).success(function(data){
+            console.log('ok');
+        }).error(function(data){
+            console.log(data);
+        });
+
+    },
+
+    /**
      * Нажатие кнопки на канве
      */
     canvasMouseDownHandler: function(e){
@@ -79,7 +100,6 @@ var editorView = Backbone.Marionette.ItemView.extend({
     },
 
     addClick: function (x,y,dragging){
-        console.log(x,y);
         this.clickX.push(x);
         this.clickY.push(y);
         this.clickDrag.push(dragging);
