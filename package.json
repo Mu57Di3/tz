@@ -15,6 +15,7 @@
     "browserify-shim": "*",
     "gulp-rename": "^1.2.2",
     "gulp-sftp": "^0.1.4",
+    "gulp-size": "^1.2.1",
     "gulp-sourcemaps": "^1.5.2",
     "gulp-uglify": "^1.2.0",
     "jquery": "^2.1.4",
