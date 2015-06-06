@@ -39,6 +39,8 @@ var editorView = Backbone.Marionette.ItemView.extend({
         this.clickX = [];
         this.clickY = [];
         this.clickDrag = [];
+        this.canvasContext.fillStyle = "#ffffff";
+        this.canvasContext.fillRect(0, 0, this.canvasContext.canvas.width, this.canvasContext.canvas.height);
     },
 
     /**
@@ -50,13 +52,15 @@ var editorView = Backbone.Marionette.ItemView.extend({
         this.clickX = [];
         this.clickY = [];
         this.clickDrag = [];
+        this.canvasContext.fillStyle = "#ffffff";
+        this.canvasContext.fillRect(0, 0, this.canvasContext.canvas.width, this.canvasContext.canvas.height);
     },
 
     /**
      * Сохранение изображения
      */
     saveHandler:function (){
-        var imageData = this.canvasContext.canvas.toDataURL('image/jpeg');
+        var imageData = this.canvasContext.canvas.toDataURL('image/jpeg',1.0);
         var sendData = {
             'newimage':imageData
         };
@@ -65,8 +69,10 @@ var editorView = Backbone.Marionette.ItemView.extend({
             dataType:'json',
             type:'POST',
             data:sendData
-        }).success(function(data){
-            console.log('ok');
+        }).success(function(input){
+            if (input.status == 'ok' && input.data.length>0){
+                window.app.ImagesCollection.addImage({name:input.data.name,ts:input.data.ts});
+            }
         }).error(function(data){
             console.log(data);
         });
@@ -114,6 +120,8 @@ var editorView = Backbone.Marionette.ItemView.extend({
         this.canvasContext.strokeStyle = "#000000";
         this.canvasContext.lineJoin = "round";
         this.canvasContext.lineWidth = 5;
+        this.canvasContext.fillStyle = "#ffffff";
+        this.canvasContext.fillRect(0, 0, this.canvasContext.canvas.width, this.canvasContext.canvas.height);
 
         for(var i=0; i < this.clickX.length; i++) {
             this.canvasContext.beginPath();
