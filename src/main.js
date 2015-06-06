@@ -4,7 +4,7 @@
 
 var MyApp = Marionette.Application.extend({
     el:'body',
-
+    ImagesCollection:null,
     initialize:function (){
 
     },
@@ -29,7 +29,11 @@ var AppLayoutView = Backbone.Marionette.LayoutView.extend({
     },
 
     onShow: function() {
-
+        console.log('App show');
+        var ImageList = require('./ctrl/imagelist');
+        app.ImagesCollection = require('./model/images');
+        app.ImagesCollection.fetch();
+        this.getRegion('main').show(new ImageList({collection:app.ImagesCollection}));
     },
 
     newImageHandler:function(){
@@ -48,7 +52,7 @@ var AppLayoutView = Backbone.Marionette.LayoutView.extend({
 
 });
 
-var app = new MyApp();
+window.app = new MyApp();
 app.addRegions({
     app: ".container"
 });
