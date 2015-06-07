@@ -6,6 +6,9 @@
  * Time: 0:35
  */
 
+require __DIR__.'/../redisConfig.php';
+use DB\Config\RedisConfig;
+
 $app = \Slim\Slim::getInstance();
 
 $query = $app->request()->post();
@@ -16,7 +19,26 @@ if (isset($query['newimage'])){
     $image = str_replace('data:image/jpeg;base64,','',$query['newimage']);
     $image = str_replace(' ','+',$image);
 
-    $img_key = md5($image);
+    if (isset($query['name']) && isset($query['edit_key'])){
+        $sizes = array(
+            'full',
+            '180x135',
+            '320x240',
+            '500x375',
+            '640x480'
+        );
+        $f_dir = substr($query['name'],0,2);
+        $s_dir = substr($query['name'],2,2);
+
+        array_map(function ($size) use($query,$f_dir,$s_dir){
+            $path = sprintf('%s/img/%s/%s/%s/%s.jpg',__DIR__.'/..',$size,$f_dir,$s_dir,$query['name']);
+            if (file_exists($path)){
+                @unlink($path);
+            }
+        },$sizes);
+    }
+
+    $img_key = isset($query['name']) ? $query['name'] : md5($image);
 
     $image = base64_decode($image);
 
@@ -32,30 +54,18 @@ if (isset($query['newimage'])){
     }
 
     if(file_put_contents(sprintf('%s/../img/full/%s/%s/%s.jpg',__DIR__,$f_dir,$s_dir,$img_key),$image)){
-        $redis = new \Redisent\Redis('redis://192.168.0.98:6379');
-        $redis->AUTH('jhw2bnUbln8HlEufM71k');
+        $redis = new \Redisent\Redis(RedisConfig::SRV);
+        $redis->AUTH(RedisConfig::AUTH);
         $redis->SELECT('4');
 
-        $edit_key = sha1($img_key.'aQ98nL47EeYy6$w))67d3MlHp5OKNG');
+        $edit_key =  isset($query['edit_key']) ? $query['edit_key']  : sha1($img_key.'aQ98nL47EeYy6$w))67d3MlHp5OKNG');
 
         $data = array( 'name'=>$img_key,'ts'=>time() );
 
         $redis->HSET( 'image:list',$edit_key,json_encode( $data ) );
         $redis->QUIT();
 
-        $data['url'] = 'http://tz.mu57di3.org#edit='.$edit_key;
-
-        /*$ch = curl_init();
-        curl_setopt_array($ch, array(
-            CURLOPT_RETURNTRANSFER  => true,
-            CURLOPT_HEADER          => 0,
-            CURLOPT_VERBOSE         => 0,
-            CURLOPT_URL             => 'http://must.red/s?link='.urlencode($data['url'])
-        ));
-        $result = curl_exec($ch);
-        curl_close($ch);
-
-        $data['url_sh'] =  'http://must.red/s?link='.urlencode($data['url']);*/
+        $data['edit_key'] = $edit_key;
 
         $message['data'] = $data;
     } else {
