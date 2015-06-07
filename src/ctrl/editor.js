@@ -9,8 +9,19 @@ var editorView = Backbone.Marionette.ItemView.extend({
     clickY:[],
     clickDrag:[],
     paint:false,
+    appContext:null,
+    edit_key:null,
+    name:null,
+    outlineImage:null,
 
-    initialize:function (){
+    initialize:function (options){
+        if (options.name){
+            this.name = options.name;
+        }
+
+        if (options.edit_key){
+            this.edit_key = options.edit_key;
+        }
     },
 
     events:{
@@ -41,6 +52,14 @@ var editorView = Backbone.Marionette.ItemView.extend({
         this.clickDrag = [];
         this.canvasContext.fillStyle = "#ffffff";
         this.canvasContext.fillRect(0, 0, this.canvasContext.canvas.width, this.canvasContext.canvas.height);
+        this.outlineImage = null;
+
+        if (this.name != null){
+            this.outlineImage = new Image();
+            this.outlineImage.src = 'http://tz.mu57di3.org/img/full/'+this.name+'.jpg';
+            this.canvasContext.drawImage(this.outlineImage, 0, 0, this.canvasContext.canvas.width, this.canvasContext.canvas.height);
+        }
+
     },
 
     /**
@@ -60,18 +79,39 @@ var editorView = Backbone.Marionette.ItemView.extend({
      * Сохранение изображения
      */
     saveHandler:function (){
+
         var imageData = this.canvasContext.canvas.toDataURL('image/jpeg',1.0);
         var sendData = {
             'newimage':imageData
         };
+
+        if (this.name != null && this.edit_key!=null){
+            sendData['edit_key'] = this.edit_key;
+            sendData['name'] =  this.name;
+        }
+
+        var that = this;
         $.ajax({
             url:'http://tz.mu57di3.org/imagehole',
             dataType:'json',
             type:'POST',
             data:sendData
         }).success(function(input){
-            if (input.status == 'ok' && input.data.length>0){
-                window.app.ImagesCollection.addImage({name:input.data.name,ts:input.data.ts});
+            if (input.status == 'ok'){
+                if (that.name === null && that.edit_key === null) {
+                    app.ImagesCollection.addNewImage({
+                        name: input.data.name,
+                        ts: input.data.ts
+                    });
+                    var mes = that.$('#pEditKey');
+                    mes.text('Коюч редактирования: '+input.data.edit_key);
+                    mes.show();
+                } else {
+                    app.ImagesCollection.setImage({
+                        name: input.data.name,
+                        ts: input.data.ts
+                    });
+                }
             }
         }).error(function(data){
             console.log(data);
@@ -121,7 +161,12 @@ var editorView = Backbone.Marionette.ItemView.extend({
         this.canvasContext.lineJoin = "round";
         this.canvasContext.lineWidth = 5;
         this.canvasContext.fillStyle = "#ffffff";
-        this.canvasContext.fillRect(0, 0, this.canvasContext.canvas.width, this.canvasContext.canvas.height);
+
+        if (this.outlineImage != null) {
+            this.canvasContext.drawImage(this.outlineImage, 0, 0, this.canvasContext.canvas.width, this.canvasContext.canvas.height);
+        } else {
+            this.canvasContext.fillRect(0, 0, this.canvasContext.canvas.width, this.canvasContext.canvas.height);
+        }
 
         for(var i=0; i < this.clickX.length; i++) {
             this.canvasContext.beginPath();
@@ -134,22 +179,7 @@ var editorView = Backbone.Marionette.ItemView.extend({
             this.canvasContext.closePath();
             this.canvasContext.stroke();
         }
-    }/*,
-
-    getPosition: function (e){
-        var canvas = this.canvasContext.canvas;
-
-        var curleft = 0, curtop = 0;
-        if (canvas.offsetParent) {
-            do {
-                curleft += parseInt(canvas.offsetLeft);
-                curtop += parseInt(canvas.offsetTop);
-            } while (canvas = canvas.offsetParent);
-            return { x: e.pageX-curleft, y: e.pageY-curtop };
-        }
-        return undefined;
-
-    }*/
+    }
 
 });
 
