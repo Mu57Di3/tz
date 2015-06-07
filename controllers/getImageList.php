@@ -6,12 +6,16 @@
  * Time: 18:37
  */
 
+require __DIR__.'/../redisConfig.php';
+use DB\Config\RedisConfig;
+
+
 $app = \Slim\Slim::getInstance();
 
 $message = array('status'=>'ok','data'=>array());
 
-$redis = new \Redisent\Redis('redis://192.168.0.98:6379');
-$redis->AUTH('jhw2bnUbln8HlEufM71k');
+$redis = new \Redisent\Redis(RedisConfig::SRV);
+$redis->AUTH(RedisConfig::AUTH);
 $redis->SELECT('4');
 
 
