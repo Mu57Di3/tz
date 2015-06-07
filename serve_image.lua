@@ -1,3 +1,5 @@
+-- Ресайз изображений и кеширование результата
+
 local magick = require("magick")
 local root, size, name, f_dir, s_dir = '/home/www/tz/img/', ngx.var.size, ngx.var.name, ngx.var.f_dir, ngx.var.s_dir
 local source_fname = root..'/full/'..f_dir..'/'..s_dir..'/'..f_dir..s_dir..name..'.jpg'
