@@ -5,6 +5,8 @@
 var MyApp = Marionette.Application.extend({
     el:'body',
     ImagesCollection:null,
+    MainView:null,
+
     initialize:function (){
 
     },
@@ -52,12 +54,14 @@ var AppLayoutView = Backbone.Marionette.LayoutView.extend({
 
 });
 
-window.app = new MyApp();
+
+app = new MyApp();
 app.addRegions({
     app: ".container"
 });
 app.on('start',function(){
-    this.getRegion('app').show(new AppLayoutView());
+    this.MainView = new AppLayoutView();
+    this.getRegion('app').show(this.MainView);
 });
 app.start();
 
