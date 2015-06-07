@@ -1,12 +1,14 @@
 /**
+ * Класс колекция список файлов
  * Created by Bender on 06.06.2015.
  */
-
 var ImageItem = Backbone.Model.extend({
     defaults:{
         name:'',
         ts:0
-    }
+    },
+
+    idAttribute: "name"
 });
 
 var ImagesCollection = Backbone.Collection.extend({
@@ -29,13 +31,19 @@ var ImagesCollection = Backbone.Collection.extend({
         });
     },
 
-    save : function (){
-
+    addNewImage:function(data){
+        console.log('addImage');
+        this.add(new ImageItem(data));
     },
 
-    addImage:function(data){
-        console.log(this);
-        this.add(new ImageItem(data));
+    delImage:function(id){
+        this.remove(this.get(id));
+    },
+
+    setImage:function(data){
+        var model = this.get(data.name);
+        model.set(data);
+        this.set(model,{remove: false});
     }
 });
 
