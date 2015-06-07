@@ -25,9 +25,7 @@ gulp.task('app-debug',function (){
         })
         .pipe(source('main.js'))
         .pipe(buffer())
-        .pipe(sourcemaps.init({loadMaps: true}))
         .pipe(rename({suffix: '.min'}))
-        .pipe(sourcemaps.write('./'))
         .pipe(size({showFiles:true}))
         .pipe(gulp.dest('./js/'))
         .pipe(sftp({
