@@ -4,6 +4,17 @@
  * User: Mu57Di3
  * Date: 01.06.2015
  * Time: 21:44
+ *
+ * Для правильной работы кода надо добавить в корень файл redisConfig.php с следующим содержанием
+ *
+ *   namespace DB\Config;
+ *   class RedisConfig
+ *   {
+ *      const SRV = 'redis://192.168.0.98:6379'; // mysql4-a.letitbit.net
+ *
+ *      const AUTH = 'jhw2bnUbln8HlEufM71k';
+ *   }
+ *
  */
 
 require 'vendor/autoload.php';
