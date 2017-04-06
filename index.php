@@ -10,9 +10,9 @@
  *   namespace DB\Config;
  *   class RedisConfig
  *   {
- *      const SRV = 'redis://192.168.0.98:6379'; // mysql4-a.letitbit.net
+ *      const SRV = 'redis://192.168.0.98:6379'; 
  *
- *      const AUTH = 'jhw2bnUbln8HlEufM71k';
+ *      const AUTH = 'passwod';
  *   }
  *
  */
